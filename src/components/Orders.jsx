@@ -95,7 +95,7 @@ const Orders = () => {
                       key={order.id}
                       className="bg-white shadow-lg rounded-lg p-6 mb-6 transition-all"
                     >
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center">   
                         <div>
                           <p>
                             <strong>Order ID:</strong> {order.id}

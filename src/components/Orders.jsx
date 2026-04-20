@@ -279,86 +279,131 @@ const Orders = () => {
         )}
       </main>
 
-      {selectedOrderForBill && (
-        <>
+     {selectedOrderForBill && (
+  <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div className="bg-white w-full max-w-2xl rounded-lg shadow-2xl overflow-hidden">
 
+      {/* Header */}
+      <div className="bg-gray-100 p-4 border-b flex justify-between items-center">
+        <h3 className="font-bold text-lg">Tax Invoice</h3>
+        <button onClick={() => setSelectedOrderForBill(null)}>✖</button>
+      </div>
 
-          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white w-full max-w-md rounded-lg shadow-2xl overflow-hidden">
-              {/* Bill Header */}
-              <div className="bg-gray-100 p-4 border-b flex justify-between items-center">
-                <h3 className="font-bold text-lg">Shipping Label / Invoice</h3>
-                <button onClick={() => setSelectedOrderForBill(null)} className="text-gray-600 hover:text-black">✖</button>
-              </div>
+      {/* Printable Area */}
+      <div id="printable-bill" className="p-6 text-xs">
 
-              {/* Bill Content (Printable Area) */}
-              <div id="printable-bill" className="p-6 border-2 border-dashed border-gray-300 m-4 rounded">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-black uppercase">Tax Invoice</h2>
-                  <div className="text-right text-xs">
-                    <p>Order ID: {selectedOrderForBill.id}</p>
-                    <p>Date: {new Date(selectedOrderForBill.created_at).toLocaleDateString()}</p>
-                  </div>
-                </div>
+        {/* COMPANY DETAILS */}
+        <div className="text-center border-b pb-2">
+          <h1 className="text-lg font-bold">ANANT AYURVEDA</h1>
+          <p>Manufacturers & Supplier of Ayurveda</p>
+          <p>Website: anantayurvedaa.com</p>
+          <p>GST No: 03XXXXX1234X1Z5</p>
+          <p>Jalandhar, Punjab - 144013</p>
+        </div>
 
-                <hr className="my-2" />
-
-                <div className="mb-4">
-                  <p className="text-[10px] text-gray-500 uppercase font-bold">Shipping Address:</p>
-                  <p className="font-bold text-md">{selectedOrderForBill.shipping_info?.full_name}</p>
-                  <p className="text-sm">{selectedOrderForBill.shipping_info?.address}</p>
-                  <p className="text-sm">{selectedOrderForBill.shipping_info?.city}, {selectedOrderForBill.shipping_info?.state} - {selectedOrderForBill.shipping_info?.pincode}</p>
-                  <p className="text-sm font-semibold">Phone: {selectedOrderForBill.shipping_info?.phone}</p>
-                </div>
-
-                <table className="w-full text-left text-sm mb-4">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-1">Item</th>
-                      <th className="py-1 text-center">Qty</th>
-                      <th className="py-1 text-right">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedOrderForBill.order_items.map((item) => (
-                      <tr key={item.order_item_id} className="border-b border-gray-100">
-                        <td className="py-2 text-xs">{item.title}</td>
-                        <td className="py-2 text-center">{item.quantity}</td>
-                        <td className="py-2 text-right">₹{item.price}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <div className="text-right">
-                  <p className="text-lg font-bold">Total: ₹{selectedOrderForBill.total_price}</p>
-                </div>
-
-                <div className="mt-4 text-center border-t pt-2">
-                  <p className="text-[10px] text-gray-400">Thank you for shopping with us!</p>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="p-4 bg-gray-50 flex gap-3">
-                <button
-                  onClick={() => window.print()}
-                  className="flex-1 bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700"
-                >
-                  Print Bill
-                </button>
-                <button
-                  onClick={() => setSelectedOrderForBill(null)}
-                  className="flex-1 bg-gray-300 py-2 rounded font-semibold"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+        {/* INVOICE INFO */}
+        <div className="flex justify-between mt-3">
+          <div>
+            <p><b>Invoice No:</b> INV-{selectedOrderForBill.id}</p>
+            <p><b>Date:</b> {new Date(selectedOrderForBill.created_at).toLocaleDateString()}</p>
           </div>
-        </>
+          <div className="text-right">
+            <p><b>Payment:</b> {selectedOrderForBill.payment_method}</p>
+          </div>
+        </div>
 
-      )}
+        {/* CUSTOMER */}
+        <div className="mt-3 border p-2">
+          <p className="font-bold">Billed To:</p>
+          <p>{selectedOrderForBill.shipping_info?.full_name}</p>
+          <p>{selectedOrderForBill.shipping_info?.address}</p>
+          <p>
+            {selectedOrderForBill.shipping_info?.city},{" "}
+            {selectedOrderForBill.shipping_info?.state} -{" "}
+            {selectedOrderForBill.shipping_info?.pincode}
+          </p>
+          <p>Phone: {selectedOrderForBill.shipping_info?.phone}</p>
+        </div>
+
+        {/* ITEMS TABLE */}
+        <table className="w-full mt-3 border text-xs">
+          <thead>
+            <tr className="border bg-gray-100">
+              <th className="border p-1">Item</th>
+              <th className="border p-1">Qty</th>
+              <th className="border p-1">Rate</th>
+              <th className="border p-1">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedOrderForBill.order_items.map((item) => (
+              <tr key={item.order_item_id}>
+                <td className="border p-1">{item.title}</td>
+                <td className="border p-1 text-center">{item.quantity}</td>
+                <td className="border p-1 text-right">₹{item.price}</td>
+                <td className="border p-1 text-right">
+                  ₹{item.price * item.quantity}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* TOTAL SECTION */}
+        <div className="mt-3 text-right">
+          <p>Subtotal: ₹{selectedOrderForBill.total_price - selectedOrderForBill.tax_price}</p>
+
+          {/* GST LOGIC */}
+          {selectedOrderForBill.igst > 0 ? (
+            <p>IGST (5%): ₹{selectedOrderForBill.igst}</p>
+          ) : (
+            <>
+              <p>CGST (2.5%): ₹{selectedOrderForBill.cgst}</p>
+              <p>SGST (2.5%): ₹{selectedOrderForBill.sgst}</p>
+            </>
+          )}
+
+          <p>Shipping: ₹{selectedOrderForBill.shipping_price}</p>
+
+          <p className="font-bold text-lg border-t mt-1 pt-1">
+            Total: ₹{selectedOrderForBill.total_price}
+          </p>
+        </div>
+
+        {/* COD NOTE */}
+        {selectedOrderForBill.payment_method === "COD" && (
+          <p className="text-red-600 font-bold mt-2 text-center">
+            Pay on Delivery
+          </p>
+        )}
+
+        {/* FOOTER */}
+        <div className="mt-4 text-center text-[10px] border-t pt-2">
+          <p>Goods once sold will not be taken back</p>
+          <p>Thank you for shopping with us!</p>
+          <p className="mt-2">Authorised Signatory</p>
+        </div>
+
+      </div>
+
+      {/* Buttons */}
+      <div className="p-4 bg-gray-50 flex gap-3">
+        <button
+          onClick={() => window.print()}
+          className="flex-1 bg-green-600 text-white py-2 rounded"
+        >
+          Print
+        </button>
+        <button
+          onClick={() => setSelectedOrderForBill(null)}
+          className="flex-1 bg-gray-300 py-2 rounded"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
     </>
 

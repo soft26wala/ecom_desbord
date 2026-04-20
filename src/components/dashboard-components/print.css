@@ -1,0 +1,10 @@
+@media print {
+  @page {
+    /* Isse header aur footer (URL, Date) gayab ho jayenge */
+    margin: 0;
+  }
+  body {
+    /* Content ke liye thoda margin taaki page ke bilkul chipak na jaye */
+    padding: 2cm;
+  }
+}
